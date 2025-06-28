@@ -19,6 +19,7 @@ interface BusLocation {
   speed: number
   nextStop: string
   eta: string
+  fare: number // Add this line
 }
 
 export default function MapPage() {
@@ -34,6 +35,7 @@ export default function MapPage() {
       speed: 35,
       nextStop: "Central Station",
       eta: "3 min",
+      fare: 15,
     },
     {
       id: "2",
@@ -46,6 +48,7 @@ export default function MapPage() {
       speed: 28,
       nextStop: "University Gate",
       eta: "5 min",
+      fare: 12,
     },
   ])
 
@@ -158,33 +161,45 @@ export default function MapPage() {
 
         {/* Map Area */}
         <div className="flex-1 relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center">
-            <div className="text-center">
-              <MapPin className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">Interactive Map</h3>
-              <p className="text-gray-600 mb-4">Real-time bus tracking map would display here</p>
-              <div className="bg-white p-6 rounded-lg shadow-sm max-w-md mx-auto">
-                <h4 className="font-medium mb-3">Live Bus Positions:</h4>
-                <div className="space-y-2">
-                  {filteredBuses.map((bus) => (
-                    <div key={bus.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                      <div className="flex items-center gap-2">
-                        <div
-                          className={`w-3 h-3 rounded-full ${bus.status === "active" ? "bg-green-500" : "bg-red-500"}`}
-                        />
-                        <span className="text-sm font-medium">Bus {bus.number}</span>
-                      </div>
-                      <span className="text-xs text-gray-600">
-                        {bus.lat.toFixed(4)}, {bus.lng.toFixed(4)}
-                      </span>
+          <div className="absolute inset-0">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3933.290558162733!2d123.87089164388735!3d9.656195743637198!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33aa4d5d08d89e4b%3A0xb582414b7477ee29!2sDao%20Integrated%20Bus%20Terminal!5e0!3m2!1sen!2sph!4v1751090779361!5m2!1sen!2sph"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen={true}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Bus Terminal Location Map"
+            />
+
+            {/* Overlay for bus positions */}
+            <div className="absolute top-4 left-4 bg-white p-4 rounded-lg shadow-sm max-w-sm">
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-blue-600" />
+                Live Bus Positions
+              </h4>
+              <div className="space-y-2">
+                {filteredBuses.map((bus) => (
+                  <div
+                    key={bus.id}
+                    className="flex items-center justify-between p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
+                    onClick={() => setSelectedBus(bus)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`w-3 h-3 rounded-full ${bus.status === "active" ? "bg-green-500" : "bg-red-500"}`}
+                      />
+                      <span className="text-sm font-medium">Bus {bus.number}</span>
                     </div>
-                  ))}
-                </div>
+                    <span className="text-xs text-gray-600">${bus.fare}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Selected Bus Info */}
+          {/* Selected Bus Info - keep this section as is */}
           {selectedBus && (
             <div className="absolute top-4 right-4 w-72">
               <Card>
@@ -204,6 +219,9 @@ export default function MapPage() {
                       <Badge className="ml-2" variant={selectedBus.status === "active" ? "default" : "secondary"}>
                         {selectedBus.status}
                       </Badge>
+                    </div>
+                    <div>
+                      <strong>Fare:</strong> <span className="text-blue-600 font-medium">${selectedBus.fare}</span>
                     </div>
                     <div>
                       <strong>Passengers:</strong> {selectedBus.passengers}/50
