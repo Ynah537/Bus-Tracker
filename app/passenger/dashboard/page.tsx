@@ -16,8 +16,6 @@ interface BusInfo {
   nextStop: string
   eta: string
   distance: string
-  passengers: number
-  maxPassengers: number
   fare: number
 }
 
@@ -38,8 +36,6 @@ export default function PassengerDashboard() {
       nextStop: "Central Station",
       eta: "3 min",
       distance: "0.2 km",
-      passengers: 23,
-      maxPassengers: 50,
       fare: 15,
     },
     {
@@ -49,8 +45,6 @@ export default function PassengerDashboard() {
       nextStop: "University Gate",
       eta: "7 min",
       distance: "0.5 km",
-      passengers: 15,
-      maxPassengers: 50,
       fare: 12,
     },
     {
@@ -60,8 +54,6 @@ export default function PassengerDashboard() {
       nextStop: "Main Street",
       eta: "12 min",
       distance: "0.8 km",
-      passengers: 31,
-      maxPassengers: 50,
       fare: 18,
     },
   ])
@@ -84,7 +76,6 @@ export default function PassengerDashboard() {
         prev.map((bus) => ({
           ...bus,
           eta: `${Math.max(1, Number.parseInt(bus.eta) - 1)} min`,
-          passengers: Math.max(0, Math.min(bus.maxPassengers, bus.passengers + Math.floor((Math.random() - 0.5) * 3))),
         })),
       )
     }, 10000)
@@ -98,20 +89,6 @@ export default function PassengerDashboard() {
       bus.number.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
-  const getOccupancyColor = (passengers: number, max: number) => {
-    const ratio = passengers / max
-    if (ratio < 0.5) return "text-green-600"
-    if (ratio < 0.8) return "text-yellow-600"
-    return "text-red-600"
-  }
-
-  const getOccupancyText = (passengers: number, max: number) => {
-    const ratio = passengers / max
-    if (ratio < 0.5) return "Low"
-    if (ratio < 0.8) return "Medium"
-    return "High"
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -120,7 +97,7 @@ export default function PassengerDashboard() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2">
               <Bus className="h-8 w-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">BusTracker Pro</h1>
+              <h1 className="text-2xl font-bold text-gray-900">BusTrek</h1>
             </Link>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -204,7 +181,7 @@ export default function PassengerDashboard() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                         <div className="flex items-center gap-2">
                           <Clock className="h-4 w-4 text-gray-500" />
                           <span className="text-sm">
@@ -218,33 +195,8 @@ export default function PassengerDashboard() {
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-600">Occupancy:</span>
-                          <span
-                            className={`text-sm font-medium ${getOccupancyColor(bus.passengers, bus.maxPassengers)}`}
-                          >
-                            {getOccupancyText(bus.passengers, bus.maxPassengers)}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-600">
-                            {bus.passengers}/{bus.maxPassengers} seats
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Occupancy Bar */}
-                      <div className="mb-4">
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div
-                            className={`h-2 rounded-full transition-all ${
-                              bus.passengers / bus.maxPassengers < 0.5
-                                ? "bg-green-500"
-                                : bus.passengers / bus.maxPassengers < 0.8
-                                  ? "bg-yellow-500"
-                                  : "bg-red-500"
-                            }`}
-                            style={{ width: `${(bus.passengers / bus.maxPassengers) * 100}%` }}
-                          />
+                          <span className="text-sm text-gray-600">Distance:</span>
+                          <span className="text-sm font-medium text-blue-600">{bus.distance}</span>
                         </div>
                       </div>
 
@@ -272,7 +224,7 @@ export default function PassengerDashboard() {
                     <Crown className="h-5 w-5 text-yellow-500" />
                     Current Subscription
                   </CardTitle>
-                  <CardDescription>Manage your BusTracker Pro subscription</CardDescription>
+                  <CardDescription>Manage your BusTrek subscription</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -14,11 +14,9 @@ interface BusInfo {
   number: string
   route: string
   status: "active" | "inactive" | "arriving"
-  passengers: number
   nextStop: string
   eta: string
   fare: number
-  capacity: number
 }
 
 export default function PassengerDashboard() {
@@ -29,33 +27,27 @@ export default function PassengerDashboard() {
       number: "B001",
       route: "Downtown - Airport",
       status: "active",
-      passengers: 23,
       nextStop: "Central Station",
       eta: "3 min",
       fare: 15,
-      capacity: 50,
     },
     {
       id: "2",
       number: "B002",
       route: "University - Mall",
       status: "arriving",
-      passengers: 15,
       nextStop: "University Gate",
       eta: "1 min",
       fare: 12,
-      capacity: 50,
     },
     {
       id: "3",
       number: "B003",
       route: "Business District - Harbor",
       status: "active",
-      passengers: 31,
       nextStop: "Business Plaza",
       eta: "5 min",
       fare: 18,
-      capacity: 50,
     },
   ])
 
@@ -68,7 +60,6 @@ export default function PassengerDashboard() {
       setBuses((prev) =>
         prev.map((bus) => ({
           ...bus,
-          passengers: Math.max(0, Math.min(50, bus.passengers + Math.floor((Math.random() - 0.5) * 3))),
           eta: Math.random() > 0.7 ? `${Math.floor(Math.random() * 8) + 1} min` : bus.eta,
         })),
       )
@@ -96,13 +87,6 @@ export default function PassengerDashboard() {
     }
   }
 
-  const getOccupancyColor = (passengers: number, capacity: number) => {
-    const percentage = (passengers / capacity) * 100
-    if (percentage > 80) return "text-red-600"
-    if (percentage > 60) return "text-yellow-600"
-    return "text-green-600"
-  }
-
   const handleTrackLive = (busId?: string) => {
     if (busId) {
       router.push(`/map?bus=${busId}`)
@@ -119,7 +103,7 @@ export default function PassengerDashboard() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2">
               <Bus className="h-8 w-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">Bustrek</h1>
+              <h1 className="text-2xl font-bold text-gray-900">BusTrek</h1>
             </Link>
             <div className="flex items-center gap-4">
               <Button 
@@ -175,11 +159,9 @@ export default function PassengerDashboard() {
           </Card>
           <Card className="text-center">
             <CardContent className="pt-6">
-              <Users className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-900">
-                {buses.reduce((sum, bus) => sum + bus.passengers, 0)}
-              </h3>
-              <p className="text-gray-600">Total Passengers</p>
+              <Zap className="h-12 w-12 text-purple-600 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-gray-900">{buses.length}</h3>
+              <p className="text-gray-600">Total Routes</p>
             </CardContent>
           </Card>
         </div>
@@ -217,27 +199,10 @@ export default function PassengerDashboard() {
                   <span className="text-sm font-bold text-green-600">{bus.eta}</span>
                 </div>
 
-                {/* Occupancy */}
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm text-gray-600">Occupancy:</span>
-                  <span className={`text-sm font-medium ${getOccupancyColor(bus.passengers, bus.capacity)}`}>
-                    {bus.passengers}/{bus.capacity}
-                  </span>
-                </div>
-
                 {/* Fare */}
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Fare:</span>
                   <span className="text-lg font-bold text-blue-600">${bus.fare}</span>
-                </div>
-
-                {/* Progress Bar */}
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${(bus.passengers / bus.capacity) * 100}%` }}
-                  />
                 </div>
 
                 {/* Action Buttons */}

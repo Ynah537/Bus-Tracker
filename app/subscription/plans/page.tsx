@@ -87,13 +87,10 @@ export default function SubscriptionPlans() {
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/passenger/dashboard" className="flex items-center gap-2 text-blue-600 hover:text-blue-800">
-              <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
-            </Link>
+            
             <Link href="/" className="flex items-center gap-2">
               <Bus className="h-8 w-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">BusTracker Pro</h1>
+              <h1 className="text-2xl font-bold text-gray-900">BusTrek</h1>
             </Link>
             <div />
           </div>
@@ -105,7 +102,7 @@ export default function SubscriptionPlans() {
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Plan</h2>
           <p className="text-xl text-gray-600 mb-8">
-            Get the most out of BusTracker Pro with our flexible subscription plans
+            Get the most out of BusTrek with our flexible subscription plans
           </p>
 
           {/* Billing Toggle */}

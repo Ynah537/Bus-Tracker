@@ -530,7 +530,7 @@ export default function AdminDashboard() {
                     <Crown className="h-5 w-5 text-yellow-500" />
                     Current Subscription
                   </CardTitle>
-                  <CardDescription>Manage your BusTracker Pro subscription</CardDescription>
+                  <CardDescription>Manage your BusTrek subscription</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
