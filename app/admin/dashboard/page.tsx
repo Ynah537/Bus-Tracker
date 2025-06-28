@@ -400,7 +400,7 @@ export default function AdminDashboard() {
                           <Input id="stops-count" type="number" placeholder="10" />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="route-fare">Fare ($)</Label>
+                          <Label htmlFor="route-fare">Fare (₱)</Label>
                           <Input id="route-fare" type="number" placeholder="15" />
                         </div>
                         <Button className="w-full mt-4">Add Route</Button>
@@ -431,7 +431,7 @@ export default function AdminDashboard() {
                         <TableCell>{route.endPoint}</TableCell>
                         <TableCell className="text-center">{route.stops}</TableCell>
                         <TableCell className="text-center">{route.distance}</TableCell>
-                        <TableCell className="text-center font-medium text-blue-600">${route.fare}</TableCell>
+                        <TableCell className="text-center font-medium text-blue-600">₱{route.fare}</TableCell>
                         <TableCell className="text-center">{route.activeBuses}</TableCell>
                         <TableCell>
                           <div className="flex gap-2 justify-center">
@@ -502,7 +502,7 @@ export default function AdminDashboard() {
                           </Badge>
                         </TableCell>
                         <TableCell>{subscriber.joinDate}</TableCell>
-                        <TableCell className="text-center font-medium">${subscriber.revenue}</TableCell>
+                        <TableCell className="text-center font-medium">₱{subscriber.revenue}</TableCell>
                         <TableCell>
                           <div className="flex gap-2 justify-center">
                             <Button size="sm" variant="outline">
@@ -557,7 +557,7 @@ export default function AdminDashboard() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Price:</span>
-                          <span className="font-medium">${subscription.price}/month</span>
+                          <span className="font-medium">₱{subscription.price}/month</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Next billing:</span>
@@ -598,7 +598,7 @@ export default function AdminDashboard() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="border rounded-lg p-4">
                       <h4 className="font-semibold text-lg mb-2">Monthly Plan</h4>
-                      <div className="text-3xl font-bold text-blue-600 mb-2">$29.99</div>
+                      <div className="text-3xl font-bold text-blue-600 mb-2">₱29.99</div>
                       <p className="text-sm text-gray-600 mb-4">per month</p>
                       <ul className="space-y-1 text-sm">
                         <li>✓ All premium features</li>
@@ -611,8 +611,8 @@ export default function AdminDashboard() {
                         <h4 className="font-semibold text-lg">Yearly Plan</h4>
                         <Badge variant="secondary">Save 20%</Badge>
                       </div>
-                      <div className="text-3xl font-bold text-blue-600 mb-2">$287.99</div>
-                      <p className="text-sm text-gray-600 mb-4">per year ($23.99/month)</p>
+                      <div className="text-3xl font-bold text-blue-600 mb-2">₱287.99</div>
+                      <p className="text-sm text-gray-600 mb-4">per year (₱23.99/month)</p>
                       <ul className="space-y-1 text-sm">
                         <li>✓ All premium features</li>
                         <li>✓ 2 months free</li>
@@ -648,11 +648,11 @@ export default function AdminDashboard() {
                     <Input id="max-passengers" type="number" defaultValue="50" className="mt-1" />
                   </div>
                   <div>
-                    <Label htmlFor="premium-price">Premium Plan Price ($)</Label>
+                    <Label htmlFor="premium-price">Premium Plan Price (₱)</Label>
                     <Input id="premium-price" type="number" defaultValue="29.99" className="mt-1" />
                   </div>
                   <div>
-                    <Label htmlFor="family-price">Family Plan Price ($)</Label>
+                    <Label htmlFor="family-price">Family Plan Price (₱)</Label>
                     <Input id="family-price" type="number" defaultValue="49.99" className="mt-1" />
                   </div>
                   <Button className="w-full">Save Settings</Button>
