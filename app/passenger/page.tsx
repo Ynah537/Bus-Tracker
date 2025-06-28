@@ -100,7 +100,7 @@ export default function PassengerPage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2">
               <Bus className="h-8 w-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">BusTracker Pro</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Bustrek</h1>
             </Link>
             <div className="flex items-center gap-4">
               <Link href="/map">

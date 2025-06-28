@@ -4,12 +4,9 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Bus, MapPin, Clock, Search, Star, Navigation, Calendar, CreditCard, User, LogOut } from "lucide-react"
+import { Bus, MapPin, Clock, Search, Star, Navigation, CreditCard, User, LogOut, Crown } from "lucide-react"
 import Link from "next/link"
 
 interface BusInfo {
@@ -21,18 +18,14 @@ interface BusInfo {
   distance: string
   passengers: number
   maxPassengers: number
-  price: number
+  fare: number
 }
 
-interface Booking {
-  id: string
-  busNumber: string
-  route: string
-  date: string
-  time: string
-  from: string
-  to: string
-  status: "confirmed" | "pending" | "cancelled"
+interface Subscription {
+  plan: "monthly" | "yearly"
+  status: "active" | "expired" | "cancelled"
+  startDate: string
+  endDate: string
   price: number
 }
 
@@ -47,7 +40,7 @@ export default function PassengerDashboard() {
       distance: "0.2 km",
       passengers: 23,
       maxPassengers: 50,
-      price: 15,
+      fare: 15,
     },
     {
       id: "2",
@@ -58,7 +51,7 @@ export default function PassengerDashboard() {
       distance: "0.5 km",
       passengers: 15,
       maxPassengers: 50,
-      price: 12,
+      fare: 12,
     },
     {
       id: "3",
@@ -69,39 +62,20 @@ export default function PassengerDashboard() {
       distance: "0.8 km",
       passengers: 31,
       maxPassengers: 50,
-      price: 18,
+      fare: 18,
     },
   ])
 
-  const [bookings, setBookings] = useState<Booking[]>([
-    {
-      id: "1",
-      busNumber: "B001",
-      route: "Downtown - Airport",
-      date: "2024-01-15",
-      time: "09:30 AM",
-      from: "Downtown Terminal",
-      to: "Airport Terminal",
-      status: "confirmed",
-      price: 15,
-    },
-    {
-      id: "2",
-      busNumber: "B002",
-      route: "University - Mall",
-      date: "2024-01-16",
-      time: "02:15 PM",
-      from: "University Campus",
-      to: "Shopping Mall",
-      status: "pending",
-      price: 12,
-    },
-  ])
+  const [subscription, setSubscription] = useState<Subscription>({
+    plan: "monthly",
+    status: "active",
+    startDate: "2024-01-01",
+    endDate: "2024-02-01",
+    price: 29.99,
+  })
 
   const [favoriteRoutes] = useState(["Downtown - Airport", "University - Mall"])
   const [searchTerm, setSearchTerm] = useState("")
-  const [isBookingOpen, setIsBookingOpen] = useState(false)
-  const [selectedBus, setSelectedBus] = useState<BusInfo | null>(null)
 
   // Simulate real-time updates
   useEffect(() => {
@@ -138,30 +112,6 @@ export default function PassengerDashboard() {
     return "High"
   }
 
-  const handleBookRide = (bus: BusInfo) => {
-    setSelectedBus(bus)
-    setIsBookingOpen(true)
-  }
-
-  const confirmBooking = () => {
-    if (selectedBus) {
-      const newBooking: Booking = {
-        id: Date.now().toString(),
-        busNumber: selectedBus.number,
-        route: selectedBus.route,
-        date: "2024-01-17",
-        time: "10:00 AM",
-        from: "Current Location",
-        to: "Destination",
-        status: "pending",
-        price: selectedBus.price,
-      }
-      setBookings([newBooking, ...bookings])
-      setIsBookingOpen(false)
-      setSelectedBus(null)
-    }
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -176,6 +126,12 @@ export default function PassengerDashboard() {
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <User className="h-4 w-4" />
                 <span>Welcome, John Doe</span>
+                {subscription.status === "active" && (
+                  <Badge variant="secondary" className="gap-1">
+                    <Crown className="h-3 w-3" />
+                    Premium
+                  </Badge>
+                )}
               </div>
               <Link href="/map">
                 <Button variant="outline" className="gap-2 bg-transparent">
@@ -198,7 +154,7 @@ export default function PassengerDashboard() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back, John!</h2>
-          <p className="text-gray-600">Track your buses, manage bookings, and plan your journey</p>
+          <p className="text-gray-600">Track your buses and manage your subscription</p>
         </div>
 
         <Tabs defaultValue="nearby" className="space-y-6">
@@ -207,9 +163,9 @@ export default function PassengerDashboard() {
               <Navigation className="h-4 w-4" />
               Nearby Buses
             </TabsTrigger>
-            <TabsTrigger value="bookings" className="gap-2">
-              <Calendar className="h-4 w-4" />
-              My Bookings
+            <TabsTrigger value="subscription" className="gap-2">
+              <CreditCard className="h-4 w-4" />
+              Subscription
             </TabsTrigger>
             <TabsTrigger value="favorites" className="gap-2">
               <Star className="h-4 w-4" />
@@ -244,7 +200,7 @@ export default function PassengerDashboard() {
                           <Badge variant="outline" className="mb-2">
                             {bus.distance} away
                           </Badge>
-                          <div className="text-lg font-bold text-blue-600">${bus.price}</div>
+                          <div className="text-lg font-bold text-blue-600">${bus.fare}</div>
                         </div>
                       </div>
 
@@ -293,15 +249,9 @@ export default function PassengerDashboard() {
                       </div>
 
                       <div className="flex gap-3">
-                        <Button
-                          className="flex-1"
-                          onClick={() => handleBookRide(bus)}
-                          disabled={bus.passengers >= bus.maxPassengers}
-                        >
-                          {bus.passengers >= bus.maxPassengers ? "Bus Full" : "Book Ride"}
-                        </Button>
+                        <Button className="flex-1">Track Live</Button>
                         <Button variant="outline" size="default">
-                          Track Live
+                          Set Alert
                         </Button>
                       </div>
                     </CardContent>
@@ -311,67 +261,112 @@ export default function PassengerDashboard() {
             </div>
           </TabsContent>
 
-          <TabsContent value="bookings">
-            <Card>
-              <CardHeader>
-                <CardTitle>My Bookings</CardTitle>
-                <CardDescription>View and manage your bus reservations</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {bookings.map((booking) => (
-                    <div key={booking.id} className="border rounded-lg p-4">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h4 className="font-semibold">Bus {booking.busNumber}</h4>
-                          <p className="text-gray-600">{booking.route}</p>
+          <TabsContent value="subscription">
+            <div className="space-y-6">
+              {/* Current Subscription */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Crown className="h-5 w-5 text-yellow-500" />
+                    Current Subscription
+                  </CardTitle>
+                  <CardDescription>Manage your BusTracker Pro subscription</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-medium mb-2">Plan Details</h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Plan:</span>
+                          <span className="font-medium capitalize">{subscription.plan}</span>
                         </div>
-                        <Badge
-                          variant={
-                            booking.status === "confirmed"
-                              ? "default"
-                              : booking.status === "pending"
-                                ? "secondary"
-                                : "destructive"
-                          }
-                        >
-                          {booking.status}
-                        </Badge>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <strong>Date:</strong> {booking.date}
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Status:</span>
+                          <Badge
+                            variant={
+                              subscription.status === "active"
+                                ? "default"
+                                : subscription.status === "expired"
+                                  ? "destructive"
+                                  : "secondary"
+                            }
+                          >
+                            {subscription.status}
+                          </Badge>
                         </div>
-                        <div>
-                          <strong>Time:</strong> {booking.time}
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Price:</span>
+                          <span className="font-medium">${subscription.price}/month</span>
                         </div>
-                        <div>
-                          <strong>From:</strong> {booking.from}
-                        </div>
-                        <div>
-                          <strong>To:</strong> {booking.to}
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center mt-4">
-                        <span className="font-semibold text-blue-600">${booking.price}</span>
-                        <div className="flex gap-2">
-                          {booking.status === "confirmed" && (
-                            <Button size="sm" variant="outline">
-                              View Ticket
-                            </Button>
-                          )}
-                          {booking.status !== "cancelled" && (
-                            <Button size="sm" variant="outline">
-                              Cancel
-                            </Button>
-                          )}
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Next billing:</span>
+                          <span className="font-medium">{subscription.endDate}</span>
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    <div>
+                      <h4 className="font-medium mb-2">Premium Features</h4>
+                      <ul className="space-y-1 text-sm text-gray-600">
+                        <li>✓ Real-time bus tracking</li>
+                        <li>✓ Unlimited route alerts</li>
+                        <li>✓ Priority customer support</li>
+                        <li>✓ Advanced trip planning</li>
+                        <li>✓ No ads</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="flex gap-3 mt-6">
+                    <Link href="/subscription/plans">
+                      <Button>Upgrade Plan</Button>
+                    </Link>
+                    <Button variant="outline">Manage Billing</Button>
+                    <Button variant="outline">Cancel Subscription</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Subscription Plans Preview */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Available Plans</CardTitle>
+                  <CardDescription>Choose the plan that works best for you</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="border rounded-lg p-4">
+                      <h4 className="font-semibold text-lg mb-2">Monthly Plan</h4>
+                      <div className="text-3xl font-bold text-blue-600 mb-2">$29.99</div>
+                      <p className="text-sm text-gray-600 mb-4">per month</p>
+                      <ul className="space-y-1 text-sm">
+                        <li>✓ All premium features</li>
+                        <li>✓ Cancel anytime</li>
+                        <li>✓ 24/7 support</li>
+                      </ul>
+                    </div>
+                    <div className="border rounded-lg p-4 bg-blue-50 border-blue-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h4 className="font-semibold text-lg">Yearly Plan</h4>
+                        <Badge variant="secondary">Save 20%</Badge>
+                      </div>
+                      <div className="text-3xl font-bold text-blue-600 mb-2">$287.99</div>
+                      <p className="text-sm text-gray-600 mb-4">per year ($23.99/month)</p>
+                      <ul className="space-y-1 text-sm">
+                        <li>✓ All premium features</li>
+                        <li>✓ 2 months free</li>
+                        <li>✓ Priority support</li>
+                        <li>✓ Early access to new features</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="mt-6">
+                    <Link href="/subscription/plans">
+                      <Button className="w-full">View All Plans</Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="favorites">
@@ -391,9 +386,14 @@ export default function PassengerDashboard() {
                         <h4 className="font-medium">{route}</h4>
                         <p className="text-sm text-gray-600">Frequently used route</p>
                       </div>
-                      <Button variant="outline" size="sm">
-                        Quick Book
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm">
+                          Track Now
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          Set Alert
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -402,87 +402,6 @@ export default function PassengerDashboard() {
           </TabsContent>
         </Tabs>
       </div>
-
-      {/* Booking Dialog */}
-      <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Book Your Ride</DialogTitle>
-            <DialogDescription>
-              Reserve your seat on Bus {selectedBus?.number} - {selectedBus?.route}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="from">From</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select pickup" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="downtown">Downtown Terminal</SelectItem>
-                    <SelectItem value="central">Central Station</SelectItem>
-                    <SelectItem value="university">University Gate</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="to">To</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select destination" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="airport">Airport Terminal</SelectItem>
-                    <SelectItem value="mall">Shopping Mall</SelectItem>
-                    <SelectItem value="business">Business District</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="date">Date</Label>
-                <Input type="date" defaultValue="2024-01-17" />
-              </div>
-              <div>
-                <Label htmlFor="time">Time</Label>
-                <Input type="time" defaultValue="10:00" />
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="passengers">Number of Passengers</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select passengers" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1 Passenger</SelectItem>
-                  <SelectItem value="2">2 Passengers</SelectItem>
-                  <SelectItem value="3">3 Passengers</SelectItem>
-                  <SelectItem value="4">4 Passengers</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="flex justify-between items-center">
-                <span className="font-medium">Total Amount:</span>
-                <span className="text-xl font-bold text-blue-600">${selectedBus?.price}</span>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <Button variant="outline" className="flex-1 bg-transparent" onClick={() => setIsBookingOpen(false)}>
-                Cancel
-              </Button>
-              <Button className="flex-1 gap-2" onClick={confirmBooking}>
-                <CreditCard className="h-4 w-4" />
-                Confirm Booking
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

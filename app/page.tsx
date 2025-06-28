@@ -14,7 +14,7 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
               <Bus className="h-8 w-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">BusTracker Pro</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Bustrek</h1>
             </div>
             <div className="flex items-center gap-4">
               <Link href="/login">
@@ -53,7 +53,7 @@ export default function HomePage() {
       {/* Features Section */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">Why Choose BusTracker Pro?</h3>
+          <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">Why Choose Bustrek?</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="text-center">
               <CardHeader>
@@ -109,7 +109,7 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto text-center">
           <h3 className="text-3xl font-bold text-white mb-6">Ready to Get Started?</h3>
           <p className="text-xl text-blue-100 mb-8">
-            Join thousands of passengers who trust BusTracker Pro for their daily commute
+            Join thousands of passengers who trust Bustrek for their daily commute
           </p>
           <Link href="/login">
             <Button size="lg" variant="secondary" className="gap-2">
@@ -127,7 +127,7 @@ export default function HomePage() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Bus className="h-6 w-6 text-blue-400" />
-                <h4 className="text-lg font-bold">BusTracker Pro</h4>
+                <h4 className="text-lg font-bold">Bustrek</h4>
               </div>
               <p className="text-gray-400">
                 The most advanced bus tracking and reservation system for modern transportation.
@@ -153,7 +153,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 BusTracker Pro. All rights reserved.</p>
+            <p>&copy; 2024 Bustrek. All rights reserved.</p>
           </div>
         </div>
       </footer>
