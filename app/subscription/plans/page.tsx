@@ -71,7 +71,7 @@ export default function SubscriptionPlans() {
     if (plan.monthlyPrice === 0) return "Free"
     const price = isYearly ? plan.yearlyPrice : plan.monthlyPrice
     const period = isYearly ? "year" : "month"
-    return `$${price}/${period}`
+    return `₱${price}/${period}`
   }
 
   const getSavings = (plan: Plan) => {

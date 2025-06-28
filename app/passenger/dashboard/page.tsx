@@ -177,7 +177,7 @@ export default function PassengerDashboard() {
                           <Badge variant="outline" className="mb-2">
                             {bus.distance} away
                           </Badge>
-                          <div className="text-lg font-bold text-blue-600">${bus.fare}</div>
+                          <div className="text-lg font-bold text-blue-600">₱{bus.fare}</div>
                         </div>
                       </div>
 
@@ -251,7 +251,7 @@ export default function PassengerDashboard() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Price:</span>
-                          <span className="font-medium">${subscription.price}/month</span>
+                          <span className="font-medium">₱{subscription.price}/month</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Next billing:</span>
@@ -290,7 +290,7 @@ export default function PassengerDashboard() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="border rounded-lg p-4">
                       <h4 className="font-semibold text-lg mb-2">Monthly Plan</h4>
-                      <div className="text-3xl font-bold text-blue-600 mb-2">$29.99</div>
+                      <div className="text-3xl font-bold text-blue-600 mb-2">₱29.99</div>
                       <p className="text-sm text-gray-600 mb-4">per month</p>
                       <ul className="space-y-1 text-sm">
                         <li>✓ All premium features</li>
@@ -303,8 +303,8 @@ export default function PassengerDashboard() {
                         <h4 className="font-semibold text-lg">Yearly Plan</h4>
                         <Badge variant="secondary">Save 20%</Badge>
                       </div>
-                      <div className="text-3xl font-bold text-blue-600 mb-2">$287.99</div>
-                      <p className="text-sm text-gray-600 mb-4">per year ($23.99/month)</p>
+                      <div className="text-3xl font-bold text-blue-600 mb-2">₱287.99</div>
+                      <p className="text-sm text-gray-600 mb-4">per year (₱23.99/month)</p>
                       <ul className="space-y-1 text-sm">
                         <li>✓ All premium features</li>
                         <li>✓ 2 months free</li>

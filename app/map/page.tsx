@@ -165,7 +165,7 @@ export default function MapPage() {
         // Custom bus icon using Unicode bus emoji or simple div
         const busIcon = L.divIcon({
           html: `<div style="
-            background: #9ACD32;
+            background:rgb(14, 252, 54);
             color: white;
             width: 30px;
             height: 30px;
@@ -304,7 +304,7 @@ export default function MapPage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2">
               <Bus className="h-8 w-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">Bustrek</h1>
+              <h1 className="text-2xl font-bold text-gray-900">BusTrek</h1>
             </Link>
             <div className="flex items-center gap-4">
               <Button variant="outline" size="sm" className="gap-2 bg-transparent">
@@ -405,7 +405,7 @@ export default function MapPage() {
                       />
                       <span className="text-sm font-medium">Bus {bus.number}</span>
                     </div>
-                    <span className="text-xs text-gray-600">${bus.fare}</span>
+                    <span className="text-xs text-gray-600">₱{bus.fare}</span>
                   </div>
                 ))}
               </div>
@@ -434,7 +434,7 @@ export default function MapPage() {
                       </Badge>
                     </div>
                     <div>
-                      <strong>Fare:</strong> <span className="text-blue-600 font-medium">${selectedBus.fare}</span>
+                      <strong>Fare:</strong> <span className="text-blue-600 font-medium">₱{selectedBus.fare}</span>
                     </div>
                     <div>
                       <strong>Passengers:</strong> {selectedBus.passengers}/50

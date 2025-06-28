@@ -202,7 +202,7 @@ export default function PassengerDashboard() {
                 {/* Fare */}
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Fare:</span>
-                  <span className="text-lg font-bold text-blue-600">${bus.fare}</span>
+                  <span className="text-lg font-bold text-blue-600">₱{bus.fare}</span>
                 </div>
 
                 {/* Action Buttons */}
