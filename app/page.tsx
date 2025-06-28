@@ -28,19 +28,19 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl font-bold text-gray-900 mb-6">Smart Bus Tracking & Reservation System</h2>
+          <h2 className="text-5xl font-bold text-gray-900 mb-6">Smart Bus Tracking System</h2>
           <p className="text-xl text-gray-600 mb-8">
-            Track buses in real-time, book your rides in advance, and never miss your bus again. Complete fleet
+            Track buses in real-time and never miss your bus again. Complete fleet
             management for administrators.
           </p>
           <div className="flex justify-center gap-4">
             <Link href="/login">
               <Button size="lg" className="gap-2">
                 <Users className="h-5 w-5" />
-                Book Your Ride
+                Track Your Ride
               </Button>
             </Link>
-            <Link href="/map">
+            <Link href="/login">
               <Button size="lg" variant="outline" className="gap-2 bg-transparent">
                 <MapPin className="h-5 w-5" />
                 View Live Map
@@ -54,7 +54,7 @@ export default function HomePage() {
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">Why Choose Bustrek?</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
             <Card className="text-center">
               <CardHeader>
                 <MapPin className="h-12 w-12 text-blue-600 mx-auto mb-4" />
@@ -69,24 +69,12 @@ export default function HomePage() {
 
             <Card className="text-center">
               <CardHeader>
-                <Clock className="h-12 w-12 text-green-600 mx-auto mb-4" />
-                <CardTitle>Easy Reservations</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Book your bus rides in advance and get guaranteed seats for your journey
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
                 <Shield className="h-12 w-12 text-purple-600 mx-auto mb-4" />
                 <CardTitle>Secure & Reliable</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Safe and secure booking system with real-time updates and notifications
+                  Safe with real-time updates and notifications
                 </CardDescription>
               </CardContent>
             </Card>
@@ -114,7 +102,7 @@ export default function HomePage() {
           <Link href="/login">
             <Button size="lg" variant="secondary" className="gap-2">
               <Users className="h-5 w-5" />
-              Start Booking Now
+              Start Tracking Now
             </Button>
           </Link>
         </div>
@@ -130,14 +118,13 @@ export default function HomePage() {
                 <h4 className="text-lg font-bold">Bustrek</h4>
               </div>
               <p className="text-gray-400">
-                The most advanced bus tracking and reservation system for modern transportation.
+                The most advanced bus tracking system for modern transportation.
               </p>
             </div>
             <div>
               <h5 className="font-semibold mb-4">For Passengers</h5>
               <ul className="space-y-2 text-gray-400">
                 <li>Real-time tracking</li>
-                <li>Easy reservations</li>
                 <li>Route planning</li>
                 <li>Mobile notifications</li>
               </ul>

@@ -17,7 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Route, Plus, Edit, Trash2, MapPin, LogOut, User, BusIcon, Users, TrendingUp } from "lucide-react"
+import { Route, Plus, Edit, Trash2, MapPin, LogOut, User, BusIcon, Users, Crown, CreditCard } from "lucide-react"
 import Link from "next/link"
 
 interface Bus {
@@ -41,17 +41,25 @@ interface RouteData {
   duration: string
   activeBuses: number
   dailyRevenue: number
+  fare: number
 }
 
-interface Booking {
+interface Subscriber {
   id: string
-  passengerName: string
-  busNumber: string
-  route: string
-  date: string
-  time: string
-  status: "confirmed" | "pending" | "cancelled"
-  amount: number
+  name: string
+  email: string
+  plan: "basic" | "premium" | "family"
+  status: "active" | "expired" | "cancelled"
+  joinDate: string
+  revenue: number
+}
+
+interface Subscription {
+  plan: "monthly" | "yearly"
+  status: "active" | "expired" | "cancelled"
+  startDate: string
+  endDate: string
+  price: number
 }
 
 export default function AdminDashboard() {
@@ -99,6 +107,7 @@ export default function AdminDashboard() {
       duration: "45 min",
       activeBuses: 3,
       dailyRevenue: 1250,
+      fare: 15,
     },
     {
       id: "2",
@@ -110,6 +119,7 @@ export default function AdminDashboard() {
       duration: "30 min",
       activeBuses: 2,
       dailyRevenue: 890,
+      fare: 12,
     },
     {
       id: "3",
@@ -121,41 +131,47 @@ export default function AdminDashboard() {
       duration: "35 min",
       activeBuses: 2,
       dailyRevenue: 675,
+      fare: 18,
     },
   ])
 
-  const [bookings, setBookings] = useState<Booking[]>([
+  const [subscribers, setSubscribers] = useState<Subscriber[]>([
     {
       id: "1",
-      passengerName: "John Doe",
-      busNumber: "B001",
-      route: "Downtown - Airport",
-      date: "2024-01-15",
-      time: "09:30 AM",
-      status: "confirmed",
-      amount: 15,
+      name: "John Doe",
+      email: "john@example.com",
+      plan: "premium",
+      status: "active",
+      joinDate: "2024-01-15",
+      revenue: 29.99,
     },
     {
       id: "2",
-      passengerName: "Jane Smith",
-      busNumber: "B002",
-      route: "University - Mall",
-      date: "2024-01-15",
-      time: "02:15 PM",
-      status: "pending",
-      amount: 12,
+      name: "Jane Smith",
+      email: "jane@example.com",
+      plan: "family",
+      status: "active",
+      joinDate: "2024-01-10",
+      revenue: 49.99,
     },
     {
       id: "3",
-      passengerName: "Mike Johnson",
-      busNumber: "B001",
-      route: "Downtown - Airport",
-      date: "2024-01-15",
-      time: "11:00 AM",
-      status: "confirmed",
-      amount: 15,
+      name: "Mike Johnson",
+      email: "mike@example.com",
+      plan: "basic",
+      status: "active",
+      joinDate: "2024-01-20",
+      revenue: 0,
     },
   ])
+
+  const [subscription, setSubscription] = useState<Subscription>({
+    plan: "monthly",
+    status: "active",
+    startDate: "2024-01-01",
+    endDate: "2024-02-01",
+    price: 29.99,
+  })
 
   const [isAddBusOpen, setIsAddBusOpen] = useState(false)
   const [isAddRouteOpen, setIsAddRouteOpen] = useState(false)
@@ -163,6 +179,7 @@ export default function AdminDashboard() {
   const totalRevenue = routes.reduce((sum, route) => sum + route.dailyRevenue, 0)
   const totalPassengers = buses.reduce((sum, bus) => sum + bus.passengers, 0)
   const activeBuses = buses.filter((bus) => bus.status === "active").length
+  const subscriptionRevenue = subscribers.reduce((sum, sub) => sum + sub.revenue, 0)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -204,17 +221,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <TrendingUp className="h-4 w-4 text-green-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">${totalRevenue}</div>
-              <p className="text-xs text-muted-foreground">Today's earnings</p>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Buses</CardTitle>
@@ -225,24 +232,15 @@ export default function AdminDashboard() {
               <p className="text-xs text-muted-foreground">Currently running</p>
             </CardContent>
           </Card>
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Passengers</CardTitle>
-              <Users className="h-4 w-4 text-purple-600" />
+              <CardTitle className="text-sm font-medium">Total Routes</CardTitle>
+              <Route className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-purple-600">{totalPassengers}</div>
-              <p className="text-xs text-muted-foreground">Currently aboard</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
-              <Route className="h-4 w-4 text-orange-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-orange-600">{bookings.length}</div>
-              <p className="text-xs text-muted-foreground">Today's reservations</p>
+              <div className="text-2xl font-bold text-green-600">{routes.length}</div>
+              <p className="text-xs text-muted-foreground">Available routes</p>
             </CardContent>
           </Card>
         </div>
@@ -258,14 +256,12 @@ export default function AdminDashboard() {
               <Route className="h-4 w-4" />
               Routes
             </TabsTrigger>
-            <TabsTrigger value="bookings" className="gap-2">
-              <Users className="h-4 w-4" />
-              Bookings
+          
+            <TabsTrigger value="subscription" className="gap-2">
+              <CreditCard className="h-4 w-4" />
+              My Subscription
             </TabsTrigger>
-            <TabsTrigger value="settings" className="gap-2">
-              <Route className="h-4 w-4" />
-              Settings
-            </TabsTrigger>
+          
           </TabsList>
 
           <TabsContent value="buses">
@@ -288,16 +284,16 @@ export default function AdminDashboard() {
                         <DialogTitle>Add New Bus</DialogTitle>
                         <DialogDescription>Enter the details for the new bus</DialogDescription>
                       </DialogHeader>
-                      <div className="space-y-4">
-                        <div>
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
                           <Label htmlFor="bus-number">Bus Number</Label>
                           <Input id="bus-number" placeholder="B004" />
                         </div>
-                        <div>
+                        <div className="space-y-2">
                           <Label htmlFor="driver-name">Driver Name</Label>
                           <Input id="driver-name" placeholder="Driver Name" />
                         </div>
-                        <div>
+                        <div className="space-y-2">
                           <Label htmlFor="route-select">Route</Label>
                           <Select>
                             <SelectTrigger>
@@ -310,7 +306,7 @@ export default function AdminDashboard() {
                             </SelectContent>
                           </Select>
                         </div>
-                        <Button className="w-full">Add Bus</Button>
+                        <Button className="w-full mt-4">Add Bus</Button>
                       </div>
                     </DialogContent>
                   </Dialog>
@@ -324,10 +320,8 @@ export default function AdminDashboard() {
                       <TableHead>Route</TableHead>
                       <TableHead>Driver</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Passengers</TableHead>
-                      <TableHead>Revenue</TableHead>
                       <TableHead>Last Update</TableHead>
-                      <TableHead>Actions</TableHead>
+                      <TableHead className="text-center">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -349,11 +343,9 @@ export default function AdminDashboard() {
                             {bus.status}
                           </Badge>
                         </TableCell>
-                        <TableCell>{bus.passengers}/50</TableCell>
-                        <TableCell>${bus.revenue}</TableCell>
                         <TableCell>{bus.lastUpdate}</TableCell>
                         <TableCell>
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 justify-center">
                             <Button size="sm" variant="outline">
                               <Edit className="h-4 w-4" />
                             </Button>
@@ -390,24 +382,28 @@ export default function AdminDashboard() {
                         <DialogTitle>Add New Route</DialogTitle>
                         <DialogDescription>Enter the details for the new route</DialogDescription>
                       </DialogHeader>
-                      <div className="space-y-4">
-                        <div>
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
                           <Label htmlFor="route-name">Route Name</Label>
                           <Input id="route-name" placeholder="Route Name" />
                         </div>
-                        <div>
+                        <div className="space-y-2">
                           <Label htmlFor="start-point">Start Point</Label>
                           <Input id="start-point" placeholder="Starting Location" />
                         </div>
-                        <div>
+                        <div className="space-y-2">
                           <Label htmlFor="end-point">End Point</Label>
                           <Input id="end-point" placeholder="Ending Location" />
                         </div>
-                        <div>
+                        <div className="space-y-2">
                           <Label htmlFor="stops-count">Number of Stops</Label>
                           <Input id="stops-count" type="number" placeholder="10" />
                         </div>
-                        <Button className="w-full">Add Route</Button>
+                        <div className="space-y-2">
+                          <Label htmlFor="route-fare">Fare ($)</Label>
+                          <Input id="route-fare" type="number" placeholder="15" />
+                        </div>
+                        <Button className="w-full mt-4">Add Route</Button>
                       </div>
                     </DialogContent>
                   </Dialog>
@@ -420,11 +416,11 @@ export default function AdminDashboard() {
                       <TableHead>Route Name</TableHead>
                       <TableHead>Start Point</TableHead>
                       <TableHead>End Point</TableHead>
-                      <TableHead>Stops</TableHead>
-                      <TableHead>Distance</TableHead>
-                      <TableHead>Active Buses</TableHead>
-                      <TableHead>Daily Revenue</TableHead>
-                      <TableHead>Actions</TableHead>
+                      <TableHead className="text-center">Stops</TableHead>
+                      <TableHead className="text-center">Distance</TableHead>
+                      <TableHead className="text-center">Fare</TableHead>
+                      <TableHead className="text-center">Active Buses</TableHead>
+                      <TableHead className="text-center">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -433,12 +429,12 @@ export default function AdminDashboard() {
                         <TableCell className="font-medium">{route.name}</TableCell>
                         <TableCell>{route.startPoint}</TableCell>
                         <TableCell>{route.endPoint}</TableCell>
-                        <TableCell>{route.stops}</TableCell>
-                        <TableCell>{route.distance}</TableCell>
-                        <TableCell>{route.activeBuses}</TableCell>
-                        <TableCell className="font-medium text-green-600">${route.dailyRevenue}</TableCell>
+                        <TableCell className="text-center">{route.stops}</TableCell>
+                        <TableCell className="text-center">{route.distance}</TableCell>
+                        <TableCell className="text-center font-medium text-blue-600">${route.fare}</TableCell>
+                        <TableCell className="text-center">{route.activeBuses}</TableCell>
                         <TableCell>
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 justify-center">
                             <Button size="sm" variant="outline">
                               <Edit className="h-4 w-4" />
                             </Button>
@@ -455,54 +451,66 @@ export default function AdminDashboard() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="bookings">
+          <TabsContent value="subscribers">
             <Card>
               <CardHeader>
-                <CardTitle>Booking Management</CardTitle>
-                <CardDescription>Monitor and manage passenger reservations</CardDescription>
+                <CardTitle>Subscription Management</CardTitle>
+                <CardDescription>Monitor and manage user subscriptions</CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Passenger</TableHead>
-                      <TableHead>Bus</TableHead>
-                      <TableHead>Route</TableHead>
-                      <TableHead>Date & Time</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Plan</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Amount</TableHead>
+                      <TableHead>Join Date</TableHead>
+                      <TableHead>Monthly Revenue</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {bookings.map((booking) => (
-                      <TableRow key={booking.id}>
-                        <TableCell className="font-medium">{booking.passengerName}</TableCell>
-                        <TableCell>{booking.busNumber}</TableCell>
-                        <TableCell>{booking.route}</TableCell>
+                    {subscribers.map((subscriber) => (
+                      <TableRow key={subscriber.id}>
+                        <TableCell className="font-medium">{subscriber.name}</TableCell>
+                        <TableCell>{subscriber.email}</TableCell>
                         <TableCell>
-                          {booking.date} at {booking.time}
+                          <Badge
+                            variant={
+                              subscriber.plan === "premium"
+                                ? "default"
+                                : subscriber.plan === "family"
+                                  ? "secondary"
+                                  : "outline"
+                            }
+                          >
+                            {subscriber.plan}
+                          </Badge>
                         </TableCell>
                         <TableCell>
                           <Badge
                             variant={
-                              booking.status === "confirmed"
+                              subscriber.status === "active"
                                 ? "default"
-                                : booking.status === "pending"
-                                  ? "secondary"
-                                  : "destructive"
+                                : subscriber.status === "expired"
+                                  ? "destructive"
+                                  : "secondary"
                             }
                           >
-                            {booking.status}
+                            {subscriber.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="font-medium">${booking.amount}</TableCell>
+                        <TableCell>{subscriber.joinDate}</TableCell>
+                        <TableCell className="text-center font-medium">${subscriber.revenue}</TableCell>
                         <TableCell>
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 justify-center">
                             <Button size="sm" variant="outline">
                               View
                             </Button>
-                            {booking.status === "pending" && <Button size="sm">Confirm</Button>}
+                            <Button size="sm" variant="outline">
+                              Edit
+                            </Button>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -513,6 +521,116 @@ export default function AdminDashboard() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="subscription">
+            <div className="space-y-6">
+              {/* Current Subscription */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Crown className="h-5 w-5 text-yellow-500" />
+                    Current Subscription
+                  </CardTitle>
+                  <CardDescription>Manage your BusTracker Pro subscription</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-medium mb-2">Plan Details</h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Plan:</span>
+                          <span className="font-medium capitalize">{subscription.plan}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Status:</span>
+                          <Badge
+                            variant={
+                              subscription.status === "active"
+                                ? "default"
+                                : subscription.status === "expired"
+                                  ? "destructive"
+                                  : "secondary"
+                            }
+                          >
+                            {subscription.status}
+                          </Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Price:</span>
+                          <span className="font-medium">${subscription.price}/month</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Next billing:</span>
+                          <span className="font-medium">{subscription.endDate}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="font-medium mb-2">Premium Features</h4>
+                      <ul className="space-y-1 text-sm text-gray-600">
+                        <li>✓ Real-time bus tracking</li>
+                        <li>✓ Unlimited route alerts</li>
+                        <li>✓ Priority customer support</li>
+                        <li>✓ Advanced trip planning</li>
+                        <li>✓ No ads</li>
+                        <li>✓ Admin dashboard access</li>
+                        <li>✓ Fleet management tools</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="flex gap-3 mt-6">
+                    <Link href="/subscription/plans">
+                      <Button>Upgrade Plan</Button>
+                    </Link>
+                    <Button variant="outline">Manage Billing</Button>
+                    <Button variant="outline">Cancel Subscription</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Subscription Plans Preview */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Available Plans</CardTitle>
+                  <CardDescription>Choose the plan that works best for you</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="border rounded-lg p-4">
+                      <h4 className="font-semibold text-lg mb-2">Monthly Plan</h4>
+                      <div className="text-3xl font-bold text-blue-600 mb-2">$29.99</div>
+                      <p className="text-sm text-gray-600 mb-4">per month</p>
+                      <ul className="space-y-1 text-sm">
+                        <li>✓ All premium features</li>
+                        <li>✓ Cancel anytime</li>
+                        <li>✓ 24/7 support</li>
+                      </ul>
+                    </div>
+                    <div className="border rounded-lg p-4 bg-blue-50 border-blue-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h4 className="font-semibold text-lg">Yearly Plan</h4>
+                        <Badge variant="secondary">Save 20%</Badge>
+                      </div>
+                      <div className="text-3xl font-bold text-blue-600 mb-2">$287.99</div>
+                      <p className="text-sm text-gray-600 mb-4">per year ($23.99/month)</p>
+                      <ul className="space-y-1 text-sm">
+                        <li>✓ All premium features</li>
+                        <li>✓ 2 months free</li>
+                        <li>✓ Priority support</li>
+                        <li>✓ Early access to new features</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="mt-6">
+                    <Link href="/subscription/plans">
+                      <Button className="w-full">View All Plans</Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
           <TabsContent value="settings">
             <div className="grid gap-6">
               <Card>
@@ -520,24 +638,24 @@ export default function AdminDashboard() {
                   <CardTitle>System Settings</CardTitle>
                   <CardDescription>Configure system-wide settings</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   <div>
                     <Label htmlFor="update-interval">GPS Update Interval (seconds)</Label>
-                    <Input id="update-interval" type="number" defaultValue="30" />
+                    <Input id="update-interval" type="number" defaultValue="30" className="mt-1" />
                   </div>
                   <div>
                     <Label htmlFor="max-passengers">Maximum Passengers per Bus</Label>
-                    <Input id="max-passengers" type="number" defaultValue="50" />
+                    <Input id="max-passengers" type="number" defaultValue="50" className="mt-1" />
                   </div>
                   <div>
-                    <Label htmlFor="booking-fee">Booking Fee ($)</Label>
-                    <Input id="booking-fee" type="number" defaultValue="2" />
+                    <Label htmlFor="premium-price">Premium Plan Price ($)</Label>
+                    <Input id="premium-price" type="number" defaultValue="29.99" className="mt-1" />
                   </div>
                   <div>
-                    <Label htmlFor="cancellation-policy">Cancellation Policy (hours before)</Label>
-                    <Input id="cancellation-policy" type="number" defaultValue="2" />
+                    <Label htmlFor="family-price">Family Plan Price ($)</Label>
+                    <Input id="family-price" type="number" defaultValue="49.99" className="mt-1" />
                   </div>
-                  <Button>Save Settings</Button>
+                  <Button className="w-full">Save Settings</Button>
                 </CardContent>
               </Card>
             </div>
@@ -547,3 +665,4 @@ export default function AdminDashboard() {
     </div>
   )
 }
+                   

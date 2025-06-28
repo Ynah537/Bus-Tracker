@@ -249,7 +249,9 @@ export default function PassengerDashboard() {
                       </div>
 
                       <div className="flex gap-3">
-                        <Button className="flex-1">Track Live</Button>
+                        <Link href="/map" className="flex-1">
+                          <Button className="w-full">Track Live</Button>
+                        </Link>
                         <Button variant="outline" size="default">
                           Set Alert
                         </Button>
@@ -387,9 +389,11 @@ export default function PassengerDashboard() {
                         <p className="text-sm text-gray-600">Frequently used route</p>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                          Track Now
-                        </Button>
+                        <Link href="/map">
+                          <Button variant="outline" size="sm">
+                            Track Now
+                          </Button>
+                        </Link>
                         <Button variant="outline" size="sm">
                           Set Alert
                         </Button>

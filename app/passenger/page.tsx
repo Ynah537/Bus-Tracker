@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Bus, MapPin, Clock, Search, Star, Navigation } from "lucide-react"
+import { Bus, MapPin, Clock, Search, Star, Navigation, Bell } from "lucide-react"
 import Link from "next/link"
 
 interface BusInfo {
@@ -100,7 +100,7 @@ export default function PassengerPage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2">
               <Bus className="h-8 w-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">Bustrek</h1>
+              <h1 className="text-2xl font-bold text-gray-900">BusTracker Pro</h1>
             </Link>
             <div className="flex items-center gap-4">
               <Link href="/map">
@@ -119,7 +119,7 @@ export default function PassengerPage() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back!</h2>
-          <p className="text-gray-600">Track your buses and plan your journey</p>
+          <p className="text-gray-600">Track your buses and monitor real-time arrivals</p>
         </div>
 
         {/* Search */}
@@ -200,9 +200,17 @@ export default function PassengerPage() {
                         {getOccupancyText(bus.passengers, bus.maxPassengers)} ({bus.passengers}/{bus.maxPassengers})
                       </span>
                     </div>
-                    <Button size="sm" variant="outline">
-                      Track Bus
-                    </Button>
+                    <div className="flex gap-2">
+                      <Link href="/map">
+                        <Button size="sm" variant="outline">
+                          Track Live
+                        </Button>
+                      </Link>
+                      <Button size="sm" variant="outline" className="gap-1 bg-transparent">
+                        <Bell className="h-3 w-3" />
+                        Set Alert
+                      </Button>
+                    </div>
                   </div>
 
                   {/* Occupancy Bar */}
